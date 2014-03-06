@@ -1,6 +1,6 @@
 package launcher;
 
-import game_res.*;
+import resources.*;
 
 public class Blocked {
 	
