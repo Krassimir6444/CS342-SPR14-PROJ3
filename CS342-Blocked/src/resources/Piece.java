@@ -7,12 +7,11 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 public class Piece extends JButton { 
+	private static final long serialVersionUID = 1L;
 	
 	private boolean Z = false;
 	private int width;
 	private int height;
-	private int xPos;
-	private int yPos;
 	
 	public Piece(int w, int h, int x, int y) {
 		super();
@@ -22,20 +21,12 @@ public class Piece extends JButton {
 		} catch (IOException ex) { }
 		width = w;
 		height = h;
-		xPos = x;
-		yPos = y;
+		this.setPreferredSize(new Dimension(width,height));
 		this.setVisible(true);
 	}
 	
 	public void setTargetPiece() {
 		this.Z = true;
 	}
-	
-	public int getX() {
-		return this.xPos;
-	}
 
-	public int getY() {
-		return this.yPos;
-	}
 }
