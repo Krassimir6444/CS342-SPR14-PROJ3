@@ -1,3 +1,4 @@
+package classes;
 
 public class BuildBoard {
 	private final int row, column;

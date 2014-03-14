@@ -1,3 +1,4 @@
+package classes;
 
 public class ValidateMove {
 	private int[][] board;

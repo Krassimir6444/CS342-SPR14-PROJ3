@@ -1,3 +1,5 @@
+package classes;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -8,7 +10,7 @@ public class FileInput {
 	private Node root;
 	
 	public FileInput(){
-		File file = new File("board.txt");
+		File file = new File("src/resources/board.txt");
         try {
              Scanner scanner = new Scanner(file); 
             while (scanner.hasNextLine()) {
@@ -36,6 +38,11 @@ public class FileInput {
         listTraversal(root, 10);
 	}
 	
+	private String getResource(String string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	public void addNode(int startPos, int endPos, int width, int length, char mobility){//General method to add to List
 		Node newNode = new Node(startPos, endPos, width, length, mobility);	//Declares a new Node
 		newNode.next = root;
