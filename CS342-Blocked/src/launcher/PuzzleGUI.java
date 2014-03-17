@@ -2,17 +2,20 @@ package launcher;
 
 import classes.*;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.io.IOException;
 
 import javax.swing.JPanel;
 
@@ -72,6 +75,12 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 				grid2[i]= new Rectangle(end, start, width, height);
 				p2.add(grid[i]);
 			}
+			/*
+			try {
+				Image icon = ImageIO.read(getClass().getResourceAsStream("/resources/" + "wood.gif"));
+			    grid[i].setIcon(new ImageIcon(icon));
+			  } catch(IOException ex){}
+			*/
 		}
 		
 		p3.add(Reset);
@@ -169,6 +178,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 	
 	public void addMove() {
 		moveCount++;
+		moves.setText(" Moves: " + moveCount + " |");
 	}
 	
 	public boolean isCollision(Rectangle r1, int x){
@@ -200,6 +210,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 					if(isCollision(temp, i)){
 						grid[i].setLocation(nX + 75, nY);
 						grid2[i].setLocation(nX + 75, nY);
+						addMove();
 					}
 				}
 				if(finalX < -75 && mobility[i] == 'b' ){
@@ -207,6 +218,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 					if(isCollision(temp, i)){
 						grid[i].setLocation(nX - 75, nY);
 						grid2[i].setLocation(nX - 75, nY);
+						addMove();
 					}
 				}
 				if(finalY > 75 && mobility[i] == 'b'){
@@ -214,6 +226,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 					if(isCollision(temp, i)){
 						grid[i].setLocation(nX, nY+75);
 						grid2[i].setLocation(nX, nY+75);
+						addMove();
 					}
 				}
 				if(finalY < -75 && mobility[i] == 'b'){
@@ -221,6 +234,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 					if(isCollision(temp, i)){
 						grid[i].setLocation(nX, nY-75);
 						grid2[i].setLocation(nX, nY-75);
+						addMove();
 					}
 				}
 			}
