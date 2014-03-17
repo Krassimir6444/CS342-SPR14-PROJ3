@@ -15,7 +15,7 @@ public class FileInput {
              Scanner scanner = new Scanner(file); 
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                String[] tokens = line.split("  ");
+                String[] tokens = line.split(" ");
                 if(lineRead == 0){
 	                rows = Integer.parseInt(tokens[0]);
 	                columns = Integer.parseInt(tokens[1]);
