@@ -1,21 +1,28 @@
 package launcher;
 
 import classes.*;
+
 import javax.swing.*;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 
 import javax.swing.JPanel;
 
-public class PuzzleGUI extends JFrame {
+public class PuzzleGUI extends JFrame implements MouseMotionListener{
 	FileInput boardPieces = new FileInput();
 	private static final long serialVersionUID = 1L;
+	private char[] mobility = new char[8];
 	private static JPanel p1, p2, p3;						
-	private JButton[] grid = new JButton[8];;
+	private JButton[] grid = new JButton[8];
+	private Rectangle[] grid2 = new Rectangle[8];
 	private static JMenuBar menu = new JMenuBar();			//Menu Bar to display certain options
 	private JMenu m1 = new JMenu("Game");					//Menu that contains 3 sub items
 	private JMenuItem exit = new JMenuItem("Exit");			//Sub MenuItem to menu m1
@@ -47,11 +54,24 @@ public class PuzzleGUI extends JFrame {
 			end = boardPieces.blockEnd(i)*75;
 			height = boardPieces.blockLength(i)*75;
 			width = boardPieces.blockWidth(i)*75;
-
-			grid[i] = new JButton(""+(i+1));
-			grid[i].setBackground(Color.LIGHT_GRAY);
-			grid[i].setBounds(start,end,height,width);
-			p2.add(grid[i]);
+			mobility[i] = boardPieces.blockMobile(i);
+			
+			if(i == 7){
+				grid[i] = new JButton("Z");
+				grid[i].addMouseMotionListener(this);
+				grid[i].setBackground(Color.LIGHT_GRAY);
+				grid[i].setBounds(end, start,width, height);
+				grid2[i]= new Rectangle(end, start, width, height);
+				p2.add(grid[i]);
+			}
+			else{
+				grid[i] = new JButton(""+(i+1));
+				grid[i].addMouseMotionListener(this);
+				grid[i].setBackground(Color.LIGHT_GRAY);
+				grid[i].setBounds(end, start,width, height);
+				grid2[i]= new Rectangle(end, start, width, height);
+				p2.add(grid[i]);
+			}
 		}
 		
 		p3.add(Reset);
@@ -151,6 +171,64 @@ public class PuzzleGUI extends JFrame {
 		moveCount++;
 	}
 	
+	public boolean isCollision(Rectangle r1, int x){
+		for(int i=0;i<8;i++){
+			if(grid2[i].intersects(r1) && i != x){
+				return false;
+			}
+		}
+		return true;
+	}
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		int nX, nY, x, y, finalX, finalY;
+
+		Rectangle temp;
+		for(int i = 0;i<8;i++){
+			if (e.getSource() == grid[i]) {
+				temp = grid2[i];
+				
+				x = e.getX();
+				y = e.getY();
+				nX = grid[i].getX();
+				nY = grid[i].getY();
+				
+				finalX = x - nX;
+				finalY = y - nY;
+				if(finalX > 75 && mobility[i] == 'b' ){
+					temp.setLocation(nX+75,nY);
+					if(isCollision(temp, i)){
+						grid[i].setLocation(nX + 75, nY);
+						grid2[i].setLocation(nX + 75, nY);
+					}
+				}
+				if(finalX < -75 && mobility[i] == 'b' ){
+					temp.setLocation(nX-75,nY);
+					if(isCollision(temp, i)){
+						grid[i].setLocation(nX - 75, nY);
+						grid2[i].setLocation(nX - 75, nY);
+					}
+				}
+				if(finalY > 75 && mobility[i] == 'b'){
+					temp.setLocation(nX,nY+75);
+					if(isCollision(temp, i)){
+						grid[i].setLocation(nX, nY+75);
+						grid2[i].setLocation(nX, nY+75);
+					}
+				}
+				if(finalY < -75 && mobility[i] == 'b'){
+					temp.setLocation(nX,nY-75);
+					if(isCollision(temp, i)){
+						grid[i].setLocation(nX, nY-75);
+						grid2[i].setLocation(nX, nY-75);
+					}
+				}
+			}
+		}
+	}
+
+	public void mouseMoved(MouseEvent e) {}
+	
 	public static void main(String[] args){
 		PuzzleGUI  GUI = new PuzzleGUI();
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();	//gets default location
@@ -166,6 +244,5 @@ public class PuzzleGUI extends JFrame {
 		GUI.setVisible(true);											//Sets the JFrame to be visible and
 		GUI.setResizable(true);
 	}
-	
-	
+
 }
