@@ -19,13 +19,14 @@ public class PuzzleGUI extends JFrame {
 	private static JMenuBar menu = new JMenuBar();			//Menu Bar to display certain options
 	private JMenu m1 = new JMenu("Game");					//Menu that contains 3 sub items
 	private JMenuItem exit = new JMenuItem("Exit");			//Sub MenuItem to menu m1
-	private JMenuItem Reset = new JMenuItem("Reset");
 	private JMenuItem Help = new JMenuItem("Help");			//Sub MenuItem to menu m2
 	private JMenuItem About = new JMenuItem("About");
-	private JLabel timer;
-	private int time = 0;
+	private JButton Hint = new JButton("Hint");
+	private JButton Solve = new JButton("Solve");
+	private JButton Reset = new JButton("Reset");
+	private JLabel timer, moves;
 	private Timer timeClock;
-	private int timeAccumulator;
+	private int timeAccumulator, moveCount = 0;
 	
 	public PuzzleGUI () {
 		super("Sliding Block Puzzle");
@@ -34,10 +35,9 @@ public class PuzzleGUI extends JFrame {
 		p1 = new JPanel();
 		p2 = new JPanel();
 		p3 = new JPanel();
-		
+
 		menu.add(m1);
 		m1.add(exit);
-		m1.add(Reset);
 		m1.add(Help);
 		m1.add(About);
 		
@@ -54,12 +54,19 @@ public class PuzzleGUI extends JFrame {
 			p2.add(grid[i]);
 		}
 		
-		timer = new JLabel("Timer: " + timeAccumulator + "");
+		p3.add(Reset);
+		p3.add(Hint);
+		p3.add(Solve);
+		
+		timer = new JLabel("| Timer: " + timeAccumulator + " | ");
 		int delay = 1000;
 	    timeClock = new Timer(delay,new TimerHandler() );
 	    timeClock.start();
-		p3.add(timer);
-	    
+		menu.add(timer);
+		
+		moves = new JLabel(" Moves: " + moveCount + " |");
+		menu.add(moves);
+		
 		implementListeners();
 	}
 	
@@ -74,19 +81,10 @@ public class PuzzleGUI extends JFrame {
 					public void actionPerformed(ActionEvent event) { System.exit(1); }
 			    }
 		);
-		Reset.setMnemonic('r');
-		Reset.addActionListener(
-				new ActionListener() {
-					// reinitializes game when user clicks resetItem, or alt+r
-					public void actionPerformed(ActionEvent event) { 
-						//TODO: implement functionality
-					}
-			    }
-		);
-		Help.setMnemonic('h');
+		Help.setMnemonic('p');
 		Help.addActionListener(
 				new ActionListener() {
-					// displays help when user clicks HelpItem, or alt+h
+					// displays help when user clicks HelpItem, or alt+p
 					public void actionPerformed(ActionEvent event) {
 						JOptionPane.showMessageDialog( PuzzleGUI.this,
 			    				  "For more information about Blocked go to:\n"
@@ -106,6 +104,33 @@ public class PuzzleGUI extends JFrame {
 					}
 			    }
 		);
+		Reset.setMnemonic('r');
+		Reset.addActionListener(
+				new ActionListener() {
+					// reinitializes game when user clicks resetItem, or alt+r
+					public void actionPerformed(ActionEvent event) { 
+						//TODO: implement functionality
+					}
+			    }
+		);
+		Hint.setMnemonic('h');
+		Hint.addActionListener(
+				new ActionListener() {
+					// reinitializes game when user clicks resetItem, or alt+h
+					public void actionPerformed(ActionEvent event) { 
+						//TODO: implement functionality
+					}
+			    }
+		);
+		Solve.setMnemonic('s');
+		Solve.addActionListener(
+				new ActionListener() {
+					// reinitializes game when user clicks resetItem, or alt+s
+					public void actionPerformed(ActionEvent event) { 
+						//TODO: implement functionality
+					}
+			    }
+		);
 	}
 	
 	private class TimerHandler implements ActionListener {
@@ -113,13 +138,17 @@ public class PuzzleGUI extends JFrame {
 	    public void actionPerformed(ActionEvent event) {
 	    	// very weird but works, change if see fit
 	    	timeAccumulator += timeClock.getDelay() / 1000;
-	    	timer.setText("Timer: " + timeAccumulator + "");
+	    	timer.setText("| Timer: " + timeAccumulator + " | ");
 	    }
 	}
 	
 	public void stopTimer() {
 		// stops the timer when necessary
 		timeClock.stop();
+	}
+	
+	public void addMove() {
+		moveCount++;
 	}
 	
 	public static void main(String[] args){
