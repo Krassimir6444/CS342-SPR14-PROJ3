@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
@@ -45,7 +46,8 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 		p1 = new JPanel();
 		p2 = new JPanel();
 		p3 = new JPanel();
-
+		//p2.setBackground(Color.LIGHT_GRAY);
+		
 		menu.add(m1);
 		m1.add(exit);
 		m1.add(Help);
@@ -63,7 +65,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 				grid[i] = new JButton("Z");
 				grid[i].addMouseMotionListener(this);
 				grid[i].setBackground(Color.LIGHT_GRAY);
-				grid[i].setBounds(end, start,width, height);
+				grid[i].setBounds(end, start, width, height);
 				grid2[i]= new Rectangle(end, start, width, height);
 				p2.add(grid[i]);
 			}
@@ -84,6 +86,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 			    grid[i].setText(""+(i+1));
 			    grid[i].setHorizontalTextPosition(JButton.CENTER);
 			    grid[i].setVerticalTextPosition(JButton.CENTER);
+			    grid[i].setFont(new Font("Arial", Font.BOLD, 32));
 			  } catch(IOException ex){}
 			
 		}
@@ -210,7 +213,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 				
 				finalX = x - nX;
 				finalY = y - nY;
-				if(finalX > 75 && mobility[i] == 'b' ){
+				if(finalX > 75 && (mobility[i] == 'b' || mobility[i] == 'v')) {
 					temp.setLocation(nX+75,nY);
 					if(isCollision(temp, i)){
 						grid[i].setLocation(nX + 75, nY);
@@ -218,7 +221,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 						addMove();
 					}
 				}
-				if(finalX < -75 && mobility[i] == 'b' ){
+				if(finalX < -75 && (mobility[i] == 'b' || mobility[i] == 'v')) {
 					temp.setLocation(nX-75,nY);
 					if(isCollision(temp, i)){
 						grid[i].setLocation(nX - 75, nY);
@@ -226,7 +229,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 						addMove();
 					}
 				}
-				if(finalY > 75 && mobility[i] == 'b'){
+				if(finalY > 75 && (mobility[i] == 'b' || mobility[i] == 'h')) {
 					temp.setLocation(nX,nY+75);
 					if(isCollision(temp, i)){
 						grid[i].setLocation(nX, nY+75);
@@ -234,7 +237,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 						addMove();
 					}
 				}
-				if(finalY < -75 && mobility[i] == 'b'){
+				if(finalY < -75 && (mobility[i] == 'b' || mobility[i] == 'h')) {
 					temp.setLocation(nX,nY-75);
 					if(isCollision(temp, i)){
 						grid[i].setLocation(nX, nY-75);
