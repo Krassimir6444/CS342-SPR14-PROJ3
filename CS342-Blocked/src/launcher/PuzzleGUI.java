@@ -75,12 +75,17 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 				grid2[i]= new Rectangle(end, start, width, height);
 				p2.add(grid[i]);
 			}
-			/*
+			
 			try {
 				Image icon = ImageIO.read(getClass().getResourceAsStream("/resources/" + "wood.gif"));
-			    grid[i].setIcon(new ImageIcon(icon));
+			    Image scaledIcon = icon.getScaledInstance(width+50, height, Image.SCALE_FAST);
+			    repaint();
+			    grid[i].setIcon(new ImageIcon(scaledIcon));
+			    grid[i].setText(""+(i+1));
+			    grid[i].setHorizontalTextPosition(JButton.CENTER);
+			    grid[i].setVerticalTextPosition(JButton.CENTER);
 			  } catch(IOException ex){}
-			*/
+			
 		}
 		
 		p3.add(Reset);
