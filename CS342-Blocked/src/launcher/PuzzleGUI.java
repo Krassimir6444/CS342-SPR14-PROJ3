@@ -1,10 +1,8 @@
 package launcher;
 
 import classes.*;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -17,7 +15,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.io.IOException;
-
 import javax.swing.JPanel;
 
 public class PuzzleGUI extends JFrame implements MouseMotionListener{
@@ -86,7 +83,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 			    grid[i].setText(""+(i+1));
 			    grid[i].setHorizontalTextPosition(JButton.CENTER);
 			    grid[i].setVerticalTextPosition(JButton.CENTER);
-			    grid[i].setFont(new Font("Arial", Font.BOLD, 32));
+			    grid[i].setFont(new Font("Monospaced", Font.BOLD, 32));
 			  } catch(IOException ex){}
 			
 		}
@@ -194,6 +191,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 			if(grid2[i].intersects(r1) && i != x){
 				return false;
 			}
+			// TODO: need to check for pieces going out of bounds
 		}
 		return true;
 	}
