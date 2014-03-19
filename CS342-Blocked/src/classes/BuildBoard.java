@@ -1,10 +1,5 @@
 package classes;
 
-import java.awt.Image;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-
 public class BuildBoard {
 	private final int row, column;
 	private int[][] puzzleBoard;

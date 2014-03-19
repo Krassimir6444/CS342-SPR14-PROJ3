@@ -38,10 +38,10 @@ public class FileInput {
         listTraversal(root, 10);
 	}
 	
-	private String getResource(String string) {
+	/*private String getResource(String string) {
 		// TODO Auto-generated method stub
 		return null;
-	}
+	}*/
 
 	public void addNode(int startPos, int endPos, int width, int length, char mobility){//General method to add to List
 		Node newNode = new Node(startPos, endPos, width, length, mobility);	//Declares a new Node
@@ -67,12 +67,12 @@ public class FileInput {
 	}
 	public int blockStart(int specificBlock){
 		Node specificVal = listTraversal(root, specificBlock);
-		int startVal = specificVal.startPos;
+		int startVal = specificVal.startPos-1;
 		return startVal;
 	}
 	public int blockEnd(int specificBlock){
 		Node specificVal = listTraversal(root, specificBlock);
-		int endVal = specificVal.endPos;
+		int endVal = specificVal.endPos-1;
 		return endVal;
 	}
 	public int blockLength(int specificBlock){

@@ -1,8 +1,10 @@
 package launcher;
 
 import classes.*;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -15,6 +17,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.io.IOException;
+
 import javax.swing.JPanel;
 
 public class PuzzleGUI extends JFrame implements MouseMotionListener{
@@ -58,29 +61,24 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 			width = boardPieces.blockWidth(i)*75;
 			mobility[i] = boardPieces.blockMobile(i);
 			
-			if(i == 7){
-				grid[i] = new JButton("Z");
-				grid[i].addMouseMotionListener(this);
-				grid[i].setBackground(Color.LIGHT_GRAY);
-				grid[i].setBounds(end, start, width, height);
-				grid2[i]= new Rectangle(end, start, width, height);
-				p2.add(grid[i]);
-			}
-			else{
-				grid[i] = new JButton(""+(i+1));
-				grid[i].addMouseMotionListener(this);
-				grid[i].setBackground(Color.LIGHT_GRAY);
-				grid[i].setBounds(end, start,width, height);
-				grid2[i]= new Rectangle(end, start, width, height);
-				p2.add(grid[i]);
-			}
+			grid[i] = new JButton();
+			grid[i].addMouseMotionListener(this);
+			grid[i].setBackground(Color.LIGHT_GRAY);
+			grid[i].setBounds(end, start, width, height);
+			grid2[i] = new Rectangle(end, start, width, height);
+			p2.add(grid[i]);
 			
 			try {
 				Image icon = ImageIO.read(getClass().getResourceAsStream("/resources/" + "wood.gif"));
 			    Image scaledIcon = icon.getScaledInstance(width+50, height, Image.SCALE_FAST);
 			    repaint();
 			    grid[i].setIcon(new ImageIcon(scaledIcon));
-			    grid[i].setText(""+(i+1));
+			    if(i==7){
+			    	grid[i].setText("Z");
+			    }
+			    else{
+			    	grid[i].setText(""+(i+1));
+			    }
 			    grid[i].setHorizontalTextPosition(JButton.CENTER);
 			    grid[i].setVerticalTextPosition(JButton.CENTER);
 			    grid[i].setFont(new Font("Monospaced", Font.BOLD, 32));
@@ -186,64 +184,101 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 		moves.setText(" Moves: " + moveCount + " |");
 	}
 	
-	public boolean isCollision(Rectangle r1, int x){
-		for(int i=0;i<8;i++){
-			if(grid2[i].intersects(r1) && i != x){
-				return false;
-			}
-			// TODO: need to check for pieces going out of bounds
+	public boolean isWinner(){
+		boolean playerWon = false;
+		int x = grid[7].getX();
+		x+= grid[7].getWidth();
+			
+		if (x == 300) {
+			playerWon = true;
 		}
-		return true;
+		return playerWon;
+	}
+	
+	public boolean isCollision(Rectangle r1, int index, int x, int y, JButton temp){
+		boolean collision = false;
+		
+		for(int i=0;i<8;i++){
+			if(grid2[i].intersects(r1) && i != index){
+				return collision = false;
+			}
+		}
+		
+		x += temp.getWidth();
+		y += temp.getHeight();
+		
+		if(x >=0 && x <= 300){
+			if(y>=0 && y<=300){
+				collision = true;
+			}
+		}
+		
+		return collision;
 	}
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		int nX, nY, x, y, finalX, finalY;
-
+		int nX, nY, x, y, finalX, finalY, var, var2;
 		Rectangle temp;
+		
 		for(int i = 0;i<8;i++){
 			if (e.getSource() == grid[i]) {
 				temp = grid2[i];
-				
-				x = e.getX();
-				y = e.getY();
 				nX = grid[i].getX();
 				nY = grid[i].getY();
+				var = nX / 75;
+				var2 = nY / 75;
+				x = e.getX();
+				y = e.getY();
+				if (var != 0) {
+					x *= var;
+				}
+				if (var2 != 0) {
+					y *= var2;
+				}
 				
 				finalX = x - nX;
 				finalY = y - nY;
-				if(finalX > 75 && (mobility[i] == 'b' || mobility[i] == 'v')) {
+				if(finalX >150 && (mobility[i] == 'b' || mobility[i] == 'v')) {
 					temp.setLocation(nX+75,nY);
-					if(isCollision(temp, i)){
+					if(isCollision(temp, i, nX+75,nY, grid[i])){
 						grid[i].setLocation(nX + 75, nY);
 						grid2[i].setLocation(nX + 75, nY);
 						addMove();
 					}
 				}
-				if(finalX < -75 && (mobility[i] == 'b' || mobility[i] == 'v')) {
+				else if(finalX < -150 && (mobility[i] == 'b' || mobility[i] == 'v')) {
 					temp.setLocation(nX-75,nY);
-					if(isCollision(temp, i)){
+					if(isCollision(temp, i, nX-75,nY, grid[i])){
 						grid[i].setLocation(nX - 75, nY);
 						grid2[i].setLocation(nX - 75, nY);
 						addMove();
 					}
 				}
-				if(finalY > 75 && (mobility[i] == 'b' || mobility[i] == 'h')) {
+				else if(finalY > 150 && (mobility[i] == 'b' || mobility[i] == 'h')) {
 					temp.setLocation(nX,nY+75);
-					if(isCollision(temp, i)){
+					if(isCollision(temp, i, nX,nY+75, grid[i])){
 						grid[i].setLocation(nX, nY+75);
 						grid2[i].setLocation(nX, nY+75);
 						addMove();
 					}
 				}
-				if(finalY < -75 && (mobility[i] == 'b' || mobility[i] == 'h')) {
+				else if(finalY < -150 && (mobility[i] == 'b' || mobility[i] == 'h')) {
 					temp.setLocation(nX,nY-75);
-					if(isCollision(temp, i)){
+					if(isCollision(temp, i, nX,nY-75, grid[i])){
 						grid[i].setLocation(nX, nY-75);
 						grid2[i].setLocation(nX, nY-75);
 						addMove();
 					}
 				}
 			}
+		}
+		
+		if(isWinner()){
+			JOptionPane	//Displays the following message to the user and prompts for their name
+			.showMessageDialog(
+					this,
+					"Congrats bruh! You Just Solved The Puzzle!\n");
+			stopTimer();
 		}
 	}
 
@@ -260,9 +295,8 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 		GUI.add(p1, BorderLayout.NORTH);								//Adds the panels to the JFrame
 		GUI.add(p2, BorderLayout.CENTER);
 		GUI.add(p3, BorderLayout.SOUTH);
-		GUI.setSize(500, 500);										//Sets the size for the JFrame
+		GUI.setSize(315, 410);										//Sets the size for the JFrame
 		GUI.setVisible(true);											//Sets the JFrame to be visible and
-		GUI.setResizable(true);
+		GUI.setResizable(false);
 	}
-
 }
