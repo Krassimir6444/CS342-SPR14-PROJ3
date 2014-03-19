@@ -1,10 +1,8 @@
 package launcher;
 
 import classes.*;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -35,9 +33,9 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 	private JButton Hint = new JButton("Hint");
 	private JButton Solve = new JButton("Solve");
 	private JButton Reset = new JButton("Reset");
-	private JLabel timer, moves;
+	private JLabel timer, moves, min;
 	private Timer timeClock;
-	private int timeAccumulator, moveCount = 0;
+	private int timeAccumulator, moveCount, min2Solve = 0;
 	
 	public PuzzleGUI () {
 		super("Sliding Block Puzzle");
@@ -96,8 +94,11 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 	    timeClock.start();
 		menu.add(timer);
 		
-		moves = new JLabel(" Moves: " + moveCount + " |");
+		moves = new JLabel(" Moves: " + moveCount + " | ");
 		menu.add(moves);
+		
+		min = new JLabel(" Minimum: " + min2Solve + " ");
+		menu.add(min);
 		
 		implementListeners();
 	}
@@ -105,7 +106,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 	private void implementListeners() {
 		// when user clicks alt+g allows for shortcuts mentioned below 
 		m1.setMnemonic('g');
-		
+			
 		exit.setMnemonic('x');
 		exit.addActionListener(
 				new ActionListener() {
@@ -141,7 +142,8 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 				new ActionListener() {
 					// reinitializes game when user clicks resetItem, or alt+r
 					public void actionPerformed(ActionEvent event) { 
-						//TODO: implement functionality
+						dispose();
+						restart();
 					}
 			    }
 		);
@@ -182,6 +184,29 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 	public void addMove() {
 		moveCount++;
 		moves.setText(" Moves: " + moveCount + " |");
+	}
+	
+	public void restart() {
+		//makes sure all old data is removed, maybe redundant
+		p1.removeAll();
+		p2.removeAll();
+		p3.removeAll();
+		menu.removeAll();
+		
+		//copied over main method code to reinitialize game
+		PuzzleGUI  GUI = new PuzzleGUI();
+		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();	//gets default location
+		int x = (int) ((dimension.getWidth() - 500) / 2);
+		int y = (int) ((dimension.getHeight() - 500) / 2);
+		GUI.setLocation(x,y);
+		GUI.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);	
+		GUI.setJMenuBar(menu);
+		GUI.add(p1, BorderLayout.NORTH);								//Adds the panels to the JFrame
+		GUI.add(p2, BorderLayout.CENTER);
+		GUI.add(p3, BorderLayout.SOUTH);
+		GUI.setSize(305, 405);										//Sets the size for the JFrame
+		GUI.setVisible(true);											//Sets the JFrame to be visible and
+		GUI.setResizable(false);
 	}
 	
 	public boolean isWinner(){
@@ -238,7 +263,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 				
 				finalX = x - nX;
 				finalY = y - nY;
-				if(finalX >150 && (mobility[i] == 'b' || mobility[i] == 'v')) {
+				if(finalX >150 && (mobility[i] == 'b' || mobility[i] == 'h')) {
 					temp.setLocation(nX+75,nY);
 					if(isCollision(temp, i, nX+75,nY, grid[i])){
 						grid[i].setLocation(nX + 75, nY);
@@ -246,7 +271,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 						addMove();
 					}
 				}
-				else if(finalX < -150 && (mobility[i] == 'b' || mobility[i] == 'v')) {
+				else if(finalX < -150 && (mobility[i] == 'b' || mobility[i] == 'h')) {
 					temp.setLocation(nX-75,nY);
 					if(isCollision(temp, i, nX-75,nY, grid[i])){
 						grid[i].setLocation(nX - 75, nY);
@@ -254,7 +279,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 						addMove();
 					}
 				}
-				else if(finalY > 150 && (mobility[i] == 'b' || mobility[i] == 'h')) {
+				else if(finalY > 150 && (mobility[i] == 'b' || mobility[i] == 'v')) {
 					temp.setLocation(nX,nY+75);
 					if(isCollision(temp, i, nX,nY+75, grid[i])){
 						grid[i].setLocation(nX, nY+75);
@@ -262,7 +287,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 						addMove();
 					}
 				}
-				else if(finalY < -150 && (mobility[i] == 'b' || mobility[i] == 'h')) {
+				else if(finalY < -150 && (mobility[i] == 'b' || mobility[i] == 'v')) {
 					temp.setLocation(nX,nY-75);
 					if(isCollision(temp, i, nX,nY-75, grid[i])){
 						grid[i].setLocation(nX, nY-75);
@@ -279,6 +304,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 					this,
 					"Congrats bruh! You Just Solved The Puzzle!\n");
 			stopTimer();
+			// TODO: load next puzzle and reset
 		}
 	}
 
@@ -295,7 +321,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 		GUI.add(p1, BorderLayout.NORTH);								//Adds the panels to the JFrame
 		GUI.add(p2, BorderLayout.CENTER);
 		GUI.add(p3, BorderLayout.SOUTH);
-		GUI.setSize(315, 410);										//Sets the size for the JFrame
+		GUI.setSize(305, 405);										//Sets the size for the JFrame
 		GUI.setVisible(true);											//Sets the JFrame to be visible and
 		GUI.setResizable(false);
 	}
