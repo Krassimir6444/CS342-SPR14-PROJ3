@@ -12,7 +12,8 @@ public class FileInput {
 	public StringBuilder puzzle = new StringBuilder("src/resources/puzzle0.txt"); //can change in future resets
 																				  //also needs to be of type so can be changed
 	
-	public FileInput(){
+	public FileInput(int puzzleNumber){
+		setPuzzle(puzzleNumber);
 		String currentPuzzle = puzzle.toString();
 		File file = new File(currentPuzzle);
         try {
@@ -47,7 +48,7 @@ public class FileInput {
 		return null;
 	}*/
 	
-	public void incrementPuzzle(int i) {
+	public void setPuzzle(int i) {
 		//System.out.println(puzzle);
 		char insert = (char) (i+48);
 		puzzle.setCharAt(20,insert);

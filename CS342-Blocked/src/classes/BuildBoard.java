@@ -5,7 +5,7 @@ public class BuildBoard {
 	private int[][] puzzleBoard;
 	
 	public BuildBoard(){
-			FileInput newPuzzle = new FileInput();
+			FileInput newPuzzle = new FileInput(0); //may need to change parameter
 			row = newPuzzle.boardCol();
 			column = newPuzzle.boardRow();
 			puzzleBoard = new int[row][column];

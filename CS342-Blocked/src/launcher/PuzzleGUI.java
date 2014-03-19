@@ -19,7 +19,8 @@ import java.io.IOException;
 import javax.swing.JPanel;
 
 public class PuzzleGUI extends JFrame implements MouseMotionListener{
-	FileInput boardPieces = new FileInput();
+	private static int puzzleNumber = 0;
+	FileInput boardPieces = new FileInput(puzzleNumber);
 	private static final long serialVersionUID = 1L;
 	private char[] mobility = new char[8];
 	private static JPanel p1, p2, p3;						
@@ -37,12 +38,10 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 	private JLabel timer, moves, min;
 	private Timer timeClock;
 	private int timeAccumulator, moveCount, min2Solve = 0;
-	private int puzzleNumber = 0;
 	
-	public PuzzleGUI () {
+	public PuzzleGUI (int puzzleNumber) {
 		super("Sliding Block Puzzle");
 		int start, end, height, width;
-		//FileInput boardPieces = new FileInput();
 		//BuildBoard newBoard = new BuildBoard();
 		p1 = new JPanel();
 		p2 = new JPanel();
@@ -148,8 +147,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 					public void actionPerformed(ActionEvent event) {
 						dispose();
 						puzzleNumber++;
-						boardPieces.incrementPuzzle(puzzleNumber);
-						restart();
+						restart(puzzleNumber);
 					}
 			    }
 		);
@@ -159,7 +157,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 					// reinitializes game when user clicks resetItem, or alt+r
 					public void actionPerformed(ActionEvent event) { 
 						dispose();
-						restart();
+						restart(puzzleNumber);
 					}
 			    }
 		);
@@ -202,7 +200,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 		moves.setText(" Moves: " + moveCount + " |");
 	}
 	
-	public void restart() {
+	public void restart(int PuzzleNumber) {
 		//makes sure all old data is removed, maybe redundant
 		p1.removeAll();
 		p2.removeAll();
@@ -210,7 +208,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 		menu.removeAll();
 		
 		//copied over main method code to reinitialize game
-		PuzzleGUI  GUI = new PuzzleGUI();
+		PuzzleGUI  GUI = new PuzzleGUI(PuzzleNumber);
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();	//gets default location
 		int x = (int) ((dimension.getWidth() - 500) / 2);
 		int y = (int) ((dimension.getHeight() - 500) / 2);
@@ -320,14 +318,18 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 					this,
 					"Congrats bruh! You Just Solved The Puzzle!\n");
 			stopTimer();
-			// TODO: load next puzzle and reset
+			
+			//On to the next one..
+			dispose();
+			puzzleNumber++;
+			restart(puzzleNumber);
 		}
 	}
 
 	public void mouseMoved(MouseEvent e) {}
 	
 	public static void main(String[] args){
-		PuzzleGUI  GUI = new PuzzleGUI();
+		PuzzleGUI  GUI = new PuzzleGUI(puzzleNumber);
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();	//gets default location
 		int x = (int) ((dimension.getWidth() - 500) / 2);
 		int y = (int) ((dimension.getHeight() - 500) / 2);
