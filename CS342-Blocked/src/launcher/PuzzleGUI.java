@@ -37,10 +37,12 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 	private JLabel timer, moves, min;
 	private Timer timeClock;
 	private int timeAccumulator, moveCount, min2Solve = 0;
+	private int puzzleNumber = 0;
 	
 	public PuzzleGUI () {
 		super("Sliding Block Puzzle");
 		int start, end, height, width;
+		//FileInput boardPieces = new FileInput();
 		//BuildBoard newBoard = new BuildBoard();
 		p1 = new JPanel();
 		p2 = new JPanel();
@@ -145,7 +147,9 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 					// displays about information when user clicks AboutItem, or alt+a
 					public void actionPerformed(ActionEvent event) {
 						dispose();
-						nextPuzzle();
+						puzzleNumber++;
+						boardPieces.incrementPuzzle(puzzleNumber);
+						restart();
 					}
 			    }
 		);
@@ -219,10 +223,6 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 		GUI.setSize(305, 405);										//Sets the size for the JFrame
 		GUI.setVisible(true);											//Sets the JFrame to be visible and
 		GUI.setResizable(false);
-	}
-
-	public void nextPuzzle() {
-		// implement like restart, but change puzzle
 	}
 	
 	public boolean isWinner(){

@@ -3,15 +3,18 @@ package classes;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.lang.StringBuilder;
 
 public class FileInput {
 	private int rows, columns, start, end, width1, length1, lineRead = 0;
 	private char mobility1;
 	private Node root;
-	public String puzzle = "src/resources/puzzle1.txt"; //can change in future resets
+	public StringBuilder puzzle = new StringBuilder("src/resources/puzzle0.txt"); //can change in future resets
+																				  //also needs to be of type so can be changed
 	
 	public FileInput(){
-		File file = new File(puzzle);
+		String currentPuzzle = puzzle.toString();
+		File file = new File(currentPuzzle);
         try {
              Scanner scanner = new Scanner(file); 
             while (scanner.hasNextLine()) {
@@ -43,6 +46,13 @@ public class FileInput {
 		// TODO Auto-generated method stub
 		return null;
 	}*/
+	
+	public void incrementPuzzle(int i) {
+		//System.out.println(puzzle);
+		char insert = (char) (i+48);
+		puzzle.setCharAt(20,insert);
+		//System.out.println(puzzle);
+	}
 
 	public void addNode(int startPos, int endPos, int width, int length, char mobility){//General method to add to List
 		Node newNode = new Node(startPos, endPos, width, length, mobility);	//Declares a new Node
