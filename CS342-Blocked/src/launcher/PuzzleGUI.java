@@ -30,6 +30,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 	private JMenuItem exit = new JMenuItem("Exit");			//Sub MenuItem to menu m1
 	private JMenuItem Help = new JMenuItem("Help");			//Sub MenuItem to menu m2
 	private JMenuItem About = new JMenuItem("About");
+	private JMenuItem Next = new JMenuItem("Next");
 	private JButton Hint = new JButton("Hint");
 	private JButton Solve = new JButton("Solve");
 	private JButton Reset = new JButton("Reset");
@@ -50,6 +51,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 		m1.add(exit);
 		m1.add(Help);
 		m1.add(About);
+		m1.add(Next);
 		
 		p2.setLayout(null);
 		for(int i =7;i>=0;i--){
@@ -137,6 +139,16 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 					}
 			    }
 		);
+		Next.setMnemonic('n');
+		Next.addActionListener(
+				new ActionListener() {
+					// displays about information when user clicks AboutItem, or alt+a
+					public void actionPerformed(ActionEvent event) {
+						dispose();
+						nextPuzzle();
+					}
+			    }
+		);
 		Reset.setMnemonic('r');
 		Reset.addActionListener(
 				new ActionListener() {
@@ -207,6 +219,10 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 		GUI.setSize(305, 405);										//Sets the size for the JFrame
 		GUI.setVisible(true);											//Sets the JFrame to be visible and
 		GUI.setResizable(false);
+	}
+
+	public void nextPuzzle() {
+		// implement like restart, but change puzzle
 	}
 	
 	public boolean isWinner(){

@@ -8,9 +8,10 @@ public class FileInput {
 	private int rows, columns, start, end, width1, length1, lineRead = 0;
 	private char mobility1;
 	private Node root;
+	public String puzzle = "src/resources/puzzle1.txt"; //can change in future resets
 	
 	public FileInput(){
-		File file = new File("src/resources/board.txt");
+		File file = new File(puzzle);
         try {
              Scanner scanner = new Scanner(file); 
             while (scanner.hasNextLine()) {
