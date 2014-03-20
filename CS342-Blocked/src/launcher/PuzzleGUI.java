@@ -334,10 +334,19 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 					"Congrats bruh! You Just Solved The Puzzle!\n");
 			stopTimer();
 			
-			//On to the next one..
+			//on to the next one...
 			dispose();
 			puzzleNumber++;
-			restart(puzzleNumber);
+			
+			if(puzzleNumber < 10) { 
+				restart(puzzleNumber); 
+			}
+			else {
+				stopTimer();
+				JOptionPane.showMessageDialog(this,"No More Puzzles for You, Mister!\n");
+				System.exit(1);
+			}
+			
 		}
 	}
 
