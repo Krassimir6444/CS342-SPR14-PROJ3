@@ -49,10 +49,9 @@ public class FileInput {
 	}*/
 	
 	public void setPuzzle(int i) {
-		//System.out.println(puzzle);
+		//casts integer as char and increments puzzle file
 		char insert = (char) (i+48);
 		puzzle.setCharAt(20,insert);
-		//System.out.println(puzzle);
 	}
 
 	public void addNode(int startPos, int endPos, int width, int length, char mobility){//General method to add to List

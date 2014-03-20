@@ -32,6 +32,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 	private JMenuItem Help = new JMenuItem("Help");			//Sub MenuItem to menu m2
 	private JMenuItem About = new JMenuItem("About");
 	private JMenuItem Next = new JMenuItem("Next");
+	private JMenuItem Previous = new JMenuItem("Previous");
 	private JButton Hint = new JButton("Hint");
 	private JButton Solve = new JButton("Solve");
 	private JButton Reset = new JButton("Reset");
@@ -49,10 +50,11 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 		//p2.setBackground(Color.LIGHT_GRAY);
 		
 		menu.add(m1);
-		m1.add(exit);
-		m1.add(Help);
 		m1.add(About);
+		m1.add(Help);
 		m1.add(Next);
+		m1.add(Previous);
+		m1.add(exit);
 		
 		p2.setLayout(null);
 		for(int i =7;i>=0;i--){
@@ -117,7 +119,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 					public void actionPerformed(ActionEvent event) { System.exit(1); }
 			    }
 		);
-		Help.setMnemonic('p');
+		Help.setMnemonic('h');
 		Help.addActionListener(
 				new ActionListener() {
 					// displays help when user clicks HelpItem, or alt+p
@@ -147,6 +149,19 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 					public void actionPerformed(ActionEvent event) {
 						dispose();
 						puzzleNumber++;
+						if(puzzleNumber == 10) { puzzleNumber=0; }
+						restart(puzzleNumber);
+					}
+			    }
+		);
+		Previous.setMnemonic('p');
+		Previous.addActionListener(
+				new ActionListener() {
+					// displays about information when user clicks AboutItem, or alt+a
+					public void actionPerformed(ActionEvent event) {
+						dispose();
+						puzzleNumber--;
+						if(puzzleNumber == -1) { puzzleNumber=9; }
 						restart(puzzleNumber);
 					}
 			    }
