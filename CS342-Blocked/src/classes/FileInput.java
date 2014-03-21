@@ -5,6 +5,10 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.lang.StringBuilder;
 
+import javax.swing.JOptionPane;
+
+import launcher.PuzzleGUI;
+
 public class FileInput {
 	private int rows, columns, start, end, width1, length1, lineRead = 0;
 	private char mobility1;
@@ -57,7 +61,9 @@ public class FileInput {
 	public void setPuzzle(int i) {
 		//casts integer as char and increments puzzle file
 		char insert = (char) (i+48);
+		if(i>9) { insert += 7; }
 		puzzle.setCharAt(20,insert);
+		System.out.println(puzzle);
 	}
 
 	public void addNode(int startPos, int endPos, int width, int length, char mobility){//General method to add to List

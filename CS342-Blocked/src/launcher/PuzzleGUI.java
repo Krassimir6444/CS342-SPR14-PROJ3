@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 
 public class PuzzleGUI extends JFrame implements MouseMotionListener{
 	private static int puzzleNumber = 0;
+	private static int maxPuzzles = 12;						//change if adding puzzles
 	private FileInput boardPieces = new FileInput(puzzleNumber);
 	private int numPieces = boardPieces.getNumPieces();
 	private static final long serialVersionUID = 1L;
@@ -149,7 +150,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 					public void actionPerformed(ActionEvent event) {
 						dispose();
 						puzzleNumber++;
-						if(puzzleNumber == 10) { puzzleNumber=0; }
+						if(puzzleNumber == maxPuzzles) { puzzleNumber=0; }
 						restart(puzzleNumber);
 					}
 			    }
@@ -161,7 +162,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 					public void actionPerformed(ActionEvent event) {
 						dispose();
 						puzzleNumber--;
-						if(puzzleNumber == -1) { puzzleNumber=9; }
+						if(puzzleNumber == -1) { puzzleNumber=(maxPuzzles-1); }
 						restart(puzzleNumber);
 					}
 			    }
