@@ -366,6 +366,6 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 		GUI.add(p3, BorderLayout.SOUTH);
 		GUI.setSize(465, 560);										//Sets the size for the JFrame
 		GUI.setVisible(true);											//Sets the JFrame to be visible and
-		GUI.setResizable(true);
+		GUI.setResizable(false);
 	}
 }
