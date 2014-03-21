@@ -8,6 +8,7 @@ import java.lang.StringBuilder;
 public class FileInput {
 	private int rows, columns, start, end, width1, length1, lineRead = 0;
 	private char mobility1;
+	private int numPieces;
 	private Node root;
 	public StringBuilder puzzle = new StringBuilder("src/resources/puzzle0.txt"); //can change in future resets
 																				  //also needs to be of type so can be changed
@@ -33,6 +34,7 @@ public class FileInput {
                 	String s = tokens[4];
                 	mobility1 = s.charAt(0);
                 	addNode(start, end, width1, length1, mobility1);
+                	numPieces++;
                 }
                 lineRead++;
             }
@@ -47,6 +49,10 @@ public class FileInput {
 		// TODO Auto-generated method stub
 		return null;
 	}*/
+	
+	public int getNumPieces(){
+		return numPieces;
+	}
 	
 	public void setPuzzle(int i) {
 		//casts integer as char and increments puzzle file

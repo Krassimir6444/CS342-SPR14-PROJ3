@@ -20,12 +20,13 @@ import javax.swing.JPanel;
 
 public class PuzzleGUI extends JFrame implements MouseMotionListener{
 	private static int puzzleNumber = 0;
-	FileInput boardPieces = new FileInput(puzzleNumber);
+	private FileInput boardPieces = new FileInput(puzzleNumber);
+	private int numPieces = boardPieces.getNumPieces();
 	private static final long serialVersionUID = 1L;
-	private char[] mobility = new char[8];
+	private char[] mobility = new char[numPieces];
 	private static JPanel p1, p2, p3;						
-	private JButton[] grid = new JButton[8];
-	private Rectangle[] grid2 = new Rectangle[8];
+	private JButton[] grid = new JButton[numPieces];
+	private Rectangle[] grid2 = new Rectangle[numPieces];
 	private static JMenuBar menu = new JMenuBar();			//Menu Bar to display certain options
 	private JMenu m1 = new JMenu("Game");					//Menu that contains 3 sub items
 	private JMenuItem exit = new JMenuItem("Exit");			//Sub MenuItem to menu m1
@@ -47,7 +48,6 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 		p1 = new JPanel();
 		p2 = new JPanel();
 		p3 = new JPanel();
-		//p2.setBackground(Color.LIGHT_GRAY);
 		
 		menu.add(m1);
 		m1.add(About);
@@ -57,7 +57,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 		m1.add(exit);
 		
 		p2.setLayout(null);
-		for(int i =7;i>=0;i--){
+		for(int i =0;i<numPieces;i++){
 			start = boardPieces.blockStart(i)*75;
 			end = boardPieces.blockEnd(i)*75;
 			height = boardPieces.blockLength(i)*75;
@@ -76,7 +76,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 			    Image scaledIcon = icon.getScaledInstance(width+50, height, Image.SCALE_FAST);
 			    repaint();
 			    grid[i].setIcon(new ImageIcon(scaledIcon));
-			    if(i==7){
+			    if(i==numPieces-1){
 			    	grid[i].setText("Z");
 			    }
 			    else{
@@ -233,17 +233,17 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 		GUI.add(p1, BorderLayout.NORTH);								//Adds the panels to the JFrame
 		GUI.add(p2, BorderLayout.CENTER);
 		GUI.add(p3, BorderLayout.SOUTH);
-		GUI.setSize(305, 405);										//Sets the size for the JFrame
+		GUI.setSize(465, 560);										//Sets the size for the JFrame
 		GUI.setVisible(true);											//Sets the JFrame to be visible and
-		GUI.setResizable(false);
+		GUI.setResizable(true);
 	}
 	
 	public boolean isWinner(){
 		boolean playerWon = false;
-		int x = grid[7].getX();
-		x+= grid[7].getWidth();
-			
-		if (x == 300) {
+		int x = grid[numPieces-1].getX();
+		x+= grid[numPieces-1].getWidth();
+
+		if (x == 450) {
 			playerWon = true;
 		}
 		return playerWon;
@@ -252,7 +252,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 	public boolean isCollision(Rectangle r1, int index, int x, int y, JButton temp){
 		boolean collision = false;
 		
-		for(int i=0;i<8;i++){
+		for(int i=0;i<numPieces;i++){
 			if(grid2[i].intersects(r1) && i != index){
 				return collision = false;
 			}
@@ -261,8 +261,8 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 		x += temp.getWidth();
 		y += temp.getHeight();
 		
-		if(x >=0 && x <= 300){
-			if(y>=0 && y<=300){
+		if(x >=0 && x <= 450){
+			if(y>=0 && y<=450){
 				collision = true;
 			}
 		}
@@ -274,7 +274,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 		int nX, nY, x, y, finalX, finalY, var, var2;
 		Rectangle temp;
 		
-		for(int i = 0;i<8;i++){
+		for(int i = 0;i<numPieces;i++){
 			if (e.getSource() == grid[i]) {
 				temp = grid2[i];
 				nX = grid[i].getX();
@@ -363,8 +363,8 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 		GUI.add(p1, BorderLayout.NORTH);								//Adds the panels to the JFrame
 		GUI.add(p2, BorderLayout.CENTER);
 		GUI.add(p3, BorderLayout.SOUTH);
-		GUI.setSize(305, 405);										//Sets the size for the JFrame
+		GUI.setSize(465, 560);										//Sets the size for the JFrame
 		GUI.setVisible(true);											//Sets the JFrame to be visible and
-		GUI.setResizable(false);
+		GUI.setResizable(true);
 	}
 }
