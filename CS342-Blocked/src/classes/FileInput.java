@@ -59,9 +59,9 @@ public class FileInput {
 	}
 	
 	public void setPuzzle(int i) {
-		//casts integer as char and increments puzzle file
-		char insert = (char) (i+48);
-		if(i>9) { insert += 7; }
+		//casts integer as char for puzzle file: src/resources/puzzle[].txt
+		char insert = (char) (i+48);	//converts into corresponding ascci char
+		if(i>9) { insert += 7; }		//if more than 9 puzzles, uses A-Z
 		puzzle.setCharAt(20,insert);
 		System.out.println(puzzle);
 	}
