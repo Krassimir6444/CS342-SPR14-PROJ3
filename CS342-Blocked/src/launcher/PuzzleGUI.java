@@ -114,7 +114,6 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 		
 		implementListeners();
 		
-		solved = new PuzzleSolverV2(currentPiece, 8, 6,6);
 	}
 	
 	private void implementListeners() {
@@ -190,7 +189,8 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 				new ActionListener() {
 					// reinitializes game when user clicks resetItem, or alt+h
 					public void actionPerformed(ActionEvent event) { 
-						//TODO: implement functionality
+						solved = new PuzzleSolverV2(currentPiece, 8, 6,6);
+						solved.printHint();
 					}
 			    }
 		);
@@ -199,7 +199,8 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 				new ActionListener() {
 					// reinitializes game when user clicks resetItem, or alt+s
 					public void actionPerformed(ActionEvent event) { 
-						//TODO: implement functionality
+						solved = new PuzzleSolverV2(currentPiece, 8, 6,6);
+						solved.printSolution();
 					}
 			    }
 		);

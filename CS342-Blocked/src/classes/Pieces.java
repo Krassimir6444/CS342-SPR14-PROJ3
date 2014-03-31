@@ -66,7 +66,7 @@ public class Pieces {
 	}
 	
 	boolean moveDown(int puzzle[][]){
-		int finalHeight = this.x + this.height-1;
+		int finalHeight = this.x + this.height;
 				
 		for (int i = 0; i < width; i++) {
 			if(finalHeight > 5){

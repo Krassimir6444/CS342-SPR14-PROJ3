@@ -11,12 +11,11 @@ public class PuzzleSolverV2
 	private int rows;
 	private int columns;
 	private int movesNeeded = 0;
-	private ArrayList<Pieces> blocks;
 
 	public PuzzleSolverV2(Pieces[] blocks, int numBlocks, int rows, int columns){
 		this.rows = rows;
 		this.columns = columns;
-		Snapshot FirstSnap = new Snapshot(blocks, numBlocks);
+		Snapshot FirstSnap = new Snapshot(null,blocks, numBlocks, 'a', 0, 0);
 		prevConfigs = new HashSet<Integer>();
 		queue.add(FirstSnap);
 		addToPrevConfig(FirstSnap.boardSnap());
@@ -71,7 +70,7 @@ public class PuzzleSolverV2
 			System.out.println("Right!");
 			Pieces movedPiece = new Pieces(x,y+1,width,height,id,mobility);
 			tempPiece[specificBlock] = movedPiece;
-			Snapshot newRightSnap = new Snapshot(tempPiece, tempPiece.length);
+			Snapshot newRightSnap = new Snapshot(temp, tempPiece, tempPiece.length, 'h', 1, id);
 			
 			if (addToPrevConfig(newRightSnap.board) == true){
 				System.out.println("Added to Q");
@@ -82,7 +81,7 @@ public class PuzzleSolverV2
 			System.out.println("Left!");
 			Pieces movedPiece = new Pieces(x,y-1,width,height,id,mobility);
 			tempPiece[specificBlock] = movedPiece;
-			Snapshot newLeftSnap = new Snapshot(tempPiece, tempPiece.length);
+			Snapshot newLeftSnap = new Snapshot(temp, tempPiece, tempPiece.length, 'h', -1, id);
 			
 			if (addToPrevConfig(newLeftSnap.board) == true){
 				System.out.println("Added to Q");
@@ -103,10 +102,10 @@ public class PuzzleSolverV2
 		boolean Down = tempPiece[specificBlock].moveDown(temp.boardSnap());
 		
 		if(Up){
-			System.out.println("Right!");
+			System.out.println("Up!");
 			Pieces movedPiece = new Pieces(x-1,y,width,height,id,mobility);
 			tempPiece[specificBlock] = movedPiece;
-			Snapshot newUpSnap = new Snapshot(tempPiece, tempPiece.length);
+			Snapshot newUpSnap = new Snapshot(temp, tempPiece, tempPiece.length, 'v', 1, id);
 			
 			if (addToPrevConfig(newUpSnap.board) == true){
 				System.out.println("Added to Q");
@@ -114,10 +113,10 @@ public class PuzzleSolverV2
 			}
 		}
 		if(Down){
-			System.out.println("Left!");
+			System.out.println("Down!");
 			Pieces movedPiece = new Pieces(x+1,y,width,height,id,mobility);
 			tempPiece[specificBlock] = movedPiece;
-			Snapshot newDownSnap = new Snapshot(tempPiece, tempPiece.length);
+			Snapshot newDownSnap = new Snapshot(temp, tempPiece, tempPiece.length, 'v', -1, id);
 			
 			if (addToPrevConfig(newDownSnap.board) == true){
 				System.out.println("Added to Q");
@@ -129,23 +128,28 @@ public class PuzzleSolverV2
 	private class Snapshot
 	{
 		private int board[][];			// Current board
-		public ArrayList<Move> moves = new ArrayList<Move>(movesNeeded);	// Moves it took to get this board
+		public ArrayList<Move> moves = new ArrayList<Move>();	// Moves it took to get this board
 		private Pieces[] snapshotPieces;
 		
-		public Snapshot(Pieces[] blocks, int numBlocks){
+		public Snapshot(Snapshot old, Pieces[] blocks, int numBlocks, char direction, int value, int ID){
 			this.board = createBoard(blocks, numBlocks);
 			this.snapshotPieces = blocks;
 			printBoard(board);
+			System.out.println("Moves: "+movesNeeded);
+			if(movesNeeded !=0){
+				for (int i=0; i<old.moves.size(); i++)
+				{
+					Move temp = old.moves.get(i);
+					this.moves.add(temp);
+				}
 			
-			/*if(movesNeeded !=0){
-				Move temp = new Move()
-			}
-			
-			for (int i=0; i<movesNeeded; i++)
-			{
-				Move temp = new Move(moves.get(i));
+				Move temp = new Move(direction, value, ID);
 				this.moves.add(temp);
-			}*/
+			}
+			else if(movesNeeded==0){
+				Move temp = new Move(direction, value, ID);
+				this.moves.add(temp);
+			}
 			movesNeeded++;
 			
 		}
@@ -197,12 +201,6 @@ public class PuzzleSolverV2
 			this.value = value;
 			this.blockID = ID;
 		}
-
-		// Constructor that creates a copy of the move parameter
-		public Move (Move m)
-		{
-			this(m.direction, m.value, m.blockID);
-		}
 	}
 	
 	public boolean addToPrevConfig(int key[][]){	
@@ -228,5 +226,82 @@ public class PuzzleSolverV2
 				}
 		}
 		return false;
+	}
+	
+	public void printHint()
+	{
+		if (solution != null) {
+			int id = hint.blockID;
+
+			if (id == 8)
+				System.out.print("Hint: Move block Z one spot ");
+			else if (id >= 10 && id <= 35) // Lower case letters
+				System.out.print("Hint: Move block " + (char) (id + 87)
+						+ " one spot ");
+			else if (id >= 36 && id <= 60) // Upper case letters
+				System.out.print("Hint: Move block " + (char) (id + 29)
+						+ " one spot ");
+			else
+				// Numbers
+				System.out.print("Hint: Move block " + (id + 1) + " one spot ");
+
+			if (hint.direction == 'v') {
+				if (hint.value == -1)
+					System.out.print("up\n");
+				else if (hint.value == 1)
+					System.out.print("down\n");
+			} else if (hint.direction == 'h') {
+				if (hint.value == -1)
+					System.out.print("left\n");
+				else if (hint.value == 1)
+					System.out.print("right\n");
+			}
+		}
+		if (solution == null)
+			System.out.println("Puzzle has no solution");
+	}
+
+	public void printSolution()
+	{
+		for (int i=0; i<solution.moves.size(); i++)
+		{
+			int id = solution.moves.get(i).blockID;
+			System.out.print(i+1 + ". ");
+
+			if (id == 8)
+				System.out.print("Move block Z one spot ");
+			else if (id >= 10 && id <=35)	// Lower case letters
+				System.out.print("Move block " + (char)(id+87) + " one spot ");
+			else if (id >=36 && id <= 60)	// Upper case letters			
+				System.out.print("Move block " + (char)(id+29) + " one spot ");
+			else	// Numbers
+				System.out.print("Move block " + id + " one spot ");
+
+			if (solution.moves.get(i).direction == 'v')
+			{
+				if (solution.moves.get(i).value == -1)
+					System.out.print("up\n");
+				else if (solution.moves.get(i).value == 1)
+					System.out.print("down\n");
+
+			}
+			else if (solution.moves.get(i).direction == 'h')
+			{
+				if (solution.moves.get(i).value == -1)
+					System.out.print("left\n");
+				else if (solution.moves.get(i).value == 1)
+					System.out.print("right\n");
+			}
+		}
+
+		// Print out the solved board
+		System.out.println("\nSolved board:");
+		for (int i = 0; i < rows; i++)
+		{
+			for (int j=0; j<columns; j++)
+				System.out.print(solution.board[i][j] + " ");
+
+			System.out.println();
+		}
 	}
 }
