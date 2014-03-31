@@ -70,7 +70,7 @@ public class PuzzleSolverV2
 			System.out.println("Right!");
 			Pieces movedPiece = new Pieces(x,y+1,width,height,id,mobility);
 			tempPiece[specificBlock] = movedPiece;
-			Snapshot newRightSnap = new Snapshot(temp, tempPiece, tempPiece.length, 'h', 1, id);
+			Snapshot newRightSnap = new Snapshot(temp, tempPiece, tempPiece.length, 'r', 1, id);
 			
 			if (addToPrevConfig(newRightSnap.board) == true){
 				System.out.println("Added to Q");
@@ -81,7 +81,7 @@ public class PuzzleSolverV2
 			System.out.println("Left!");
 			Pieces movedPiece = new Pieces(x,y-1,width,height,id,mobility);
 			tempPiece[specificBlock] = movedPiece;
-			Snapshot newLeftSnap = new Snapshot(temp, tempPiece, tempPiece.length, 'h', -1, id);
+			Snapshot newLeftSnap = new Snapshot(temp, tempPiece, tempPiece.length, 'l', -1, id);
 			
 			if (addToPrevConfig(newLeftSnap.board) == true){
 				System.out.println("Added to Q");
@@ -105,7 +105,7 @@ public class PuzzleSolverV2
 			System.out.println("Up!");
 			Pieces movedPiece = new Pieces(x-1,y,width,height,id,mobility);
 			tempPiece[specificBlock] = movedPiece;
-			Snapshot newUpSnap = new Snapshot(temp, tempPiece, tempPiece.length, 'v', 1, id);
+			Snapshot newUpSnap = new Snapshot(temp, tempPiece, tempPiece.length, 'u', 1, id);
 			
 			if (addToPrevConfig(newUpSnap.board) == true){
 				System.out.println("Added to Q");
@@ -116,7 +116,7 @@ public class PuzzleSolverV2
 			System.out.println("Down!");
 			Pieces movedPiece = new Pieces(x+1,y,width,height,id,mobility);
 			tempPiece[specificBlock] = movedPiece;
-			Snapshot newDownSnap = new Snapshot(temp, tempPiece, tempPiece.length, 'v', -1, id);
+			Snapshot newDownSnap = new Snapshot(temp, tempPiece, tempPiece.length, 'd', -1, id);
 			
 			if (addToPrevConfig(newDownSnap.board) == true){
 				System.out.println("Added to Q");
@@ -228,80 +228,68 @@ public class PuzzleSolverV2
 		return false;
 	}
 	
-	public void printHint()
+	public void printHint(int numBlocks)
 	{
 		if (solution != null) {
 			int id = hint.blockID;
 
 			if (id == 8)
 				System.out.print("Hint: Move block Z one spot ");
-			else if (id >= 10 && id <= 35) // Lower case letters
-				System.out.print("Hint: Move block " + (char) (id + 87)
-						+ " one spot ");
-			else if (id >= 36 && id <= 60) // Upper case letters
-				System.out.print("Hint: Move block " + (char) (id + 29)
-						+ " one spot ");
 			else
 				// Numbers
 				System.out.print("Hint: Move block " + (id + 1) + " one spot ");
 
-			if (hint.direction == 'v') {
-				if (hint.value == -1)
-					System.out.print("up\n");
-				else if (hint.value == 1)
-					System.out.print("down\n");
-			} else if (hint.direction == 'h') {
-				if (hint.value == -1)
-					System.out.print("left\n");
-				else if (hint.value == 1)
-					System.out.print("right\n");
+			if (hint.direction == 'u') {
+				System.out.print("up\n");
+			} 
+			else if (hint.direction == 'd'){
+				System.out.print("down\n");
+			}
+			else if (hint.direction == 'r') {
+				System.out.print("right\n");
+			}
+			else if (hint.direction == 'l'){
+				System.out.print("left\n");
 			}
 		}
 		if (solution == null)
 			System.out.println("Puzzle has no solution");
 	}
 
-	public void printSolution()
-	{
-		for (int i=0; i<solution.moves.size(); i++)
-		{
-			int id = solution.moves.get(i).blockID;
-			System.out.print(i+1 + ". ");
+	public void printSolution() {
+		if (solution != null) {
+			for (int i = 0; i < solution.moves.size(); i++) {
+				int id = solution.moves.get(i).blockID;
+				System.out.print(i + 1 + ". ");
 
-			if (id == 8)
-				System.out.print("Move block Z one spot ");
-			else if (id >= 10 && id <=35)	// Lower case letters
-				System.out.print("Move block " + (char)(id+87) + " one spot ");
-			else if (id >=36 && id <= 60)	// Upper case letters			
-				System.out.print("Move block " + (char)(id+29) + " one spot ");
-			else	// Numbers
-				System.out.print("Move block " + id + " one spot ");
+				if (id == 8)
+					System.out.print("Move block Z one spot ");
+				else
+					// Numbers
+					System.out.print("Move block " + id + " one spot ");
 
-			if (solution.moves.get(i).direction == 'v')
-			{
-				if (solution.moves.get(i).value == -1)
+				if (hint.direction == 'u') {
 					System.out.print("up\n");
-				else if (solution.moves.get(i).value == 1)
+				} else if (hint.direction == 'd') {
 					System.out.print("down\n");
-
-			}
-			else if (solution.moves.get(i).direction == 'h')
-			{
-				if (solution.moves.get(i).value == -1)
-					System.out.print("left\n");
-				else if (solution.moves.get(i).value == 1)
+				} else if (hint.direction == 'r') {
 					System.out.print("right\n");
+				} else if (hint.direction == 'l') {
+					System.out.print("left\n");
+				}
+			}
+
+			// Print out the solved board
+			System.out.println("\nSolved board:");
+			for (int i = 0; i < rows; i++) {
+				for (int j = 0; j < columns; j++)
+					System.out.print(solution.board[i][j] + " ");
+
+				System.out.println();
 			}
 		}
-
-		// Print out the solved board
-		System.out.println("\nSolved board:");
-		for (int i = 0; i < rows; i++)
-		{
-			for (int j=0; j<columns; j++)
-				System.out.print(solution.board[i][j] + " ");
-
-			System.out.println();
-		}
+		
+		if (solution == null)
+			System.out.println("Puzzle has no solution");
 	}
 }

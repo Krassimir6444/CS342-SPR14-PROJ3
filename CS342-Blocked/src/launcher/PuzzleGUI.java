@@ -189,8 +189,8 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 				new ActionListener() {
 					// reinitializes game when user clicks resetItem, or alt+h
 					public void actionPerformed(ActionEvent event) { 
-						solved = new PuzzleSolverV2(currentPiece, 8, 6,6);
-						solved.printHint();
+						solved = new PuzzleSolverV2(currentPiece, numPieces, 6,6);
+						solved.printHint(numPieces);
 					}
 			    }
 		);
@@ -306,8 +306,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 					temp.setLocation(nX+75,nY);
 					if(isCollision(temp, i, nX+75,nY, grid[i])){
 						grid[i].setLocation(nX + 75, nY);
-						//currentPiece[i].setX(nX+1);
-						//currentPiece[i].setY(nY);
+						currentPiece[i].y +=1;
 						grid2[i].setLocation(nX + 75, nY);
 						addMove();
 					}
@@ -316,8 +315,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 					temp.setLocation(nX-75,nY);
 					if(isCollision(temp, i, nX-75,nY, grid[i])){
 						grid[i].setLocation(nX - 75, nY);
-						//currentPiece[i].setX(nX-1);
-						//currentPiece[i].setY(nY);
+						currentPiece[i].y -=1;
 						grid2[i].setLocation(nX - 75, nY);
 						addMove();
 					}
@@ -326,8 +324,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 					temp.setLocation(nX,nY+75);
 					if(isCollision(temp, i, nX,nY+75, grid[i])){
 						grid[i].setLocation(nX, nY+75);
-						//currentPiece[i].setX(nX);
-						//currentPiece[i].setY(nY+1);
+						currentPiece[i].x +=1;
 						grid2[i].setLocation(nX, nY+75);
 						addMove();
 					}
@@ -336,8 +333,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 					temp.setLocation(nX,nY-75);
 					if(isCollision(temp, i, nX,nY-75, grid[i])){
 						grid[i].setLocation(nX, nY-75);
-						//currentPiece[i].setX(nX);
-						//currentPiece[i].setY(nY-1);
+						currentPiece[i].x -=1;
 						grid2[i].setLocation(nX, nY-75);
 						addMove();
 					}
