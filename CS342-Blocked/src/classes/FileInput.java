@@ -5,10 +5,6 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.lang.StringBuilder;
 
-import javax.swing.JOptionPane;
-
-import launcher.PuzzleGUI;
-
 public class FileInput {
 	private int rows, columns, start, end, width1, length1, lineRead = 0;
 	private char mobility1;

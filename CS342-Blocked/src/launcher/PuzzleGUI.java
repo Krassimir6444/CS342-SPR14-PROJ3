@@ -1,8 +1,10 @@
 package launcher;
 
 import classes.*;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -19,10 +21,14 @@ import java.io.IOException;
 import javax.swing.JPanel;
 
 public class PuzzleGUI extends JFrame implements MouseMotionListener{
-	private static int puzzleNumber = 0;
-	private static int maxPuzzles = 12;						//change if adding puzzles
+	//Instances of Classes
 	private FileInput boardPieces = new FileInput(puzzleNumber);
 	private int numPieces = boardPieces.getNumPieces();
+	private Pieces[] currentPiece = new Pieces[numPieces];
+	private PuzzleSolverV2 solved;
+	//
+	private static int puzzleNumber = 0;
+	private static int maxPuzzles = 12;						//change if adding puzzles
 	private static final long serialVersionUID = 1L;
 	private char[] mobility = new char[numPieces];
 	private static JPanel p1, p2, p3;						
@@ -45,7 +51,6 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 	public PuzzleGUI (int puzzleNumber) {
 		super("Sliding Block Puzzle");
 		int start, end, height, width;
-		//BuildBoard newBoard = new BuildBoard();
 		p1 = new JPanel();
 		p2 = new JPanel();
 		p3 = new JPanel();
@@ -69,6 +74,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 			grid[i].addMouseMotionListener(this);
 			grid[i].setBackground(Color.LIGHT_GRAY);
 			grid[i].setBounds(end, start, width, height);
+			currentPiece[i] = new Pieces((start/75), (end/75), (width/75), (height/75), i+1, mobility[i]);
 			grid2[i] = new Rectangle(end, start, width, height);
 			p2.add(grid[i]);
 			
@@ -107,6 +113,8 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 		menu.add(min);
 		
 		implementListeners();
+		
+		solved = new PuzzleSolverV2(currentPiece, 8, 6,6);
 	}
 	
 	private void implementListeners() {
@@ -297,6 +305,8 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 					temp.setLocation(nX+75,nY);
 					if(isCollision(temp, i, nX+75,nY, grid[i])){
 						grid[i].setLocation(nX + 75, nY);
+						//currentPiece[i].setX(nX+1);
+						//currentPiece[i].setY(nY);
 						grid2[i].setLocation(nX + 75, nY);
 						addMove();
 					}
@@ -305,6 +315,8 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 					temp.setLocation(nX-75,nY);
 					if(isCollision(temp, i, nX-75,nY, grid[i])){
 						grid[i].setLocation(nX - 75, nY);
+						//currentPiece[i].setX(nX-1);
+						//currentPiece[i].setY(nY);
 						grid2[i].setLocation(nX - 75, nY);
 						addMove();
 					}
@@ -313,6 +325,8 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 					temp.setLocation(nX,nY+75);
 					if(isCollision(temp, i, nX,nY+75, grid[i])){
 						grid[i].setLocation(nX, nY+75);
+						//currentPiece[i].setX(nX);
+						//currentPiece[i].setY(nY+1);
 						grid2[i].setLocation(nX, nY+75);
 						addMove();
 					}
@@ -321,6 +335,8 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 					temp.setLocation(nX,nY-75);
 					if(isCollision(temp, i, nX,nY-75, grid[i])){
 						grid[i].setLocation(nX, nY-75);
+						//currentPiece[i].setX(nX);
+						//currentPiece[i].setY(nY-1);
 						grid2[i].setLocation(nX, nY-75);
 						addMove();
 					}
