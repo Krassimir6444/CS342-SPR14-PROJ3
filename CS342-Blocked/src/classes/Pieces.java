@@ -1,9 +1,9 @@
 package classes;
-
+//General class pieces hold piece information for each block
 public class Pieces {
 	public int x, y, width,height, id;
 	public char mobility;
-	
+	//Pieces holds general information about each block piece
 	public Pieces(int x, int y, int width, int height, int id, char mobility){
 		this.x = x;
 		this.y = y;
@@ -12,15 +12,15 @@ public class Pieces {
 		this.id = id;
 		this.mobility = mobility;
 	}
-	
+	//General method to print piece values
 	public void printValues(){
 		System.out.println("PRINTING VALUES: X: "+this.x+" Y: "+this.y+" Width: "+this.width+" Height: "+this.height+" ID: "+this.id);
 	}
-	
+	//Several booleans to detect if the piece can move up down left or right
 	boolean moveLeft(int puzzle[][]){
 		int finalWidth = this.y -1; 
 		
-		for(int i=0;i<height;i++){
+		for(int i=0;i<height;i++){						//Goes through the whole piece determining if it can be moved left
 			if(finalWidth <0){
 				return false;
 			}
@@ -28,11 +28,9 @@ public class Pieces {
 				return false;
 			}
 		}
-		System.out.println("Moving...Left");
-		printValues();
 		return true;
 	}
-	
+	//Several booleans to detect if the piece can move up down left or right
 	boolean moveRight(int puzzle[][]){
 		int finalWidth = this.y + this.width;
 		
@@ -40,15 +38,14 @@ public class Pieces {
 			if(finalWidth >5){
 				return false;
 			}
-			else if(finalWidth <= 5 && puzzle[this.x+i][finalWidth] != 0) {
+			else if(finalWidth <= 5 && puzzle[this.x+i][finalWidth] != 0) {			//Goes through the whole piece determining if it can be moved right
 				return false;
 			}
 		}
-		System.out.println("Moving...Right");
-		printValues();
 		return true;
 	}
 	
+	//Several booleans to detect if the piece can move up down left or right
 	boolean moveUp(int puzzle[][]){
 		int finalHeight= this.x -1;
 		
@@ -56,15 +53,13 @@ public class Pieces {
 			if(finalHeight < 0){
 				return false;
 			}
-			else if (finalHeight >= 0 && puzzle[finalHeight][this.y+i] != 0) {
+			else if (finalHeight >= 0 && puzzle[finalHeight][this.y+i] != 0) {		//Goes through the whole piece determining if it can be moved up
 				return false;
 			}
 		}
-		System.out.println("Moving...Up");
-		printValues();
 		return true;
 	}
-	
+	//Several booleans to detect if the piece can move up down left or right
 	boolean moveDown(int puzzle[][]){
 		int finalHeight = this.x + this.height;
 				
@@ -72,12 +67,10 @@ public class Pieces {
 			if(finalHeight > 5){
 				return false;
 			}
-			else if (finalHeight <= 5 && puzzle[finalHeight][this.y+i] != 0) {
+			else if (finalHeight <= 5 && puzzle[finalHeight][this.y+i] != 0) {			//Goes through the whole piece determining if it can be moved down
 				return false;
 			}
-		}
-		System.out.println("Moving...Down");
-		printValues();
+		};
 		return true;
 	}
 }

@@ -19,7 +19,7 @@ import java.awt.event.MouseMotionListener;
 import java.io.IOException;
 
 import javax.swing.JPanel;
-
+//Main class that brings everything together and implements the GUI 
 public class PuzzleGUI extends JFrame implements MouseMotionListener{
 	//Instances of Classes
 	private FileInput boardPieces = new FileInput(puzzleNumber);
@@ -48,14 +48,15 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 	private Timer timeClock;
 	private int timeAccumulator, moveCount, min2Solve = 0;
 	
+	//General setup of the gui of the program
 	public PuzzleGUI (int puzzleNumber) {
 		super("Sliding Block Puzzle");
 		int start, end, height, width;
-		p1 = new JPanel();
+		p1 = new JPanel();	//Creates 3 jpanels
 		p2 = new JPanel();
 		p3 = new JPanel();
 		
-		menu.add(m1);
+		menu.add(m1);				//Basically creates the menu
 		m1.add(About);
 		m1.add(Help);
 		m1.add(Next);
@@ -63,7 +64,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 		m1.add(exit);
 		
 		p2.setLayout(null);
-		for(int i =0;i<numPieces;i++){
+		for(int i =0;i<numPieces;i++){								//Basically creates all the puzzles pieces and adds them to the 2nd jpanel
 			start = boardPieces.blockStart(i)*75;
 			end = boardPieces.blockEnd(i)*75;
 			height = boardPieces.blockLength(i)*75;
@@ -74,11 +75,11 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 			grid[i].addMouseMotionListener(this);
 			grid[i].setBackground(Color.LIGHT_GRAY);
 			grid[i].setBounds(end, start, width, height);
-			currentPiece[i] = new Pieces((start/75), (end/75), (width/75), (height/75), i+1, mobility[i]);
+			currentPiece[i] = new Pieces((start/75), (end/75), (width/75), (height/75), i+1, mobility[i]);	//Also creates each indiviudal piece using the pieces class
 			grid2[i] = new Rectangle(end, start, width, height);
 			p2.add(grid[i]);
 			
-			try {
+			try {																						//Adds nice wood photo to each piece
 				Image icon = ImageIO.read(getClass().getResourceAsStream("/resources/" + "wood.gif"));
 			    Image scaledIcon = icon.getScaledInstance(width+50, height, Image.SCALE_FAST);
 			    repaint();
@@ -96,11 +97,11 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 			
 		}
 		
-		p3.add(Reset);
-		p3.add(Hint);
+		p3.add(Reset);					//Delcaration of more buttons
+		p3.add(Hint);					
 		p3.add(Solve);
 		
-		timer = new JLabel("| Timer: " + timeAccumulator + " | ");
+		timer = new JLabel("| Timer: " + timeAccumulator + " | ");			//Setting a couple of JLabels to keep track of time moves and least amount of moves...
 		int delay = 1000;
 	    timeClock = new Timer(delay,new TimerHandler() );
 	    timeClock.start();
@@ -247,22 +248,22 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 		GUI.setVisible(true);											//Sets the JFrame to be visible and
 		GUI.setResizable(true);
 	}
-	
+	//Boolean detects if the user has gotten the Z piece to the right side
 	public boolean isWinner(){
 		boolean playerWon = false;
 		int x = grid[numPieces-1].getX();
 		x+= grid[numPieces-1].getWidth();
 
-		if (x == 450) {
+		if (x == 450) {			//If the piece reaches 450 the user has won
 			playerWon = true;
 		}
 		return playerWon;
 	}
-	
+	//Collision method that detects collisions between pieces.
 	public boolean isCollision(Rectangle r1, int index, int x, int y, JButton temp){
 		boolean collision = false;
 		
-		for(int i=0;i<numPieces;i++){
+		for(int i=0;i<numPieces;i++){		//Detects if the piece intersects any of the other pieces
 			if(grid2[i].intersects(r1) && i != index){
 				return collision = false;
 			}
@@ -271,7 +272,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 		x += temp.getWidth();
 		y += temp.getHeight();
 		
-		if(x >=0 && x <= 450){
+		if(x >=0 && x <= 450){		//Makes sure the pieces dont go out of bounds
 			if(y>=0 && y<=450){
 				collision = true;
 			}
@@ -280,7 +281,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 		return collision;
 	}
 	@Override
-	public void mouseDragged(MouseEvent e) {
+	public void mouseDragged(MouseEvent e) {		//Mouse Eventhandler that handles mouse movement
 		int nX, nY, x, y, finalX, finalY, var, var2;
 		Rectangle temp;
 		
@@ -302,7 +303,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 				
 				finalX = x - nX;
 				finalY = y - nY;
-				if(finalX >150 && (mobility[i] == 'b' || mobility[i] == 'h')) {
+				if(finalX >150 && (mobility[i] == 'b' || mobility[i] == 'h')) {//Handles the movement depending if the user wants to move up down right or left...
 					temp.setLocation(nX+75,nY);
 					if(isCollision(temp, i, nX+75,nY, grid[i])){
 						grid[i].setLocation(nX + 75, nY);
@@ -311,7 +312,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 						addMove();
 					}
 				}
-				else if(finalX < -150 && (mobility[i] == 'b' || mobility[i] == 'h')) {
+				else if(finalX < -150 && (mobility[i] == 'b' || mobility[i] == 'h')) {//Handles the movement depending if the user wants to move up down right or left...
 					temp.setLocation(nX-75,nY);
 					if(isCollision(temp, i, nX-75,nY, grid[i])){
 						grid[i].setLocation(nX - 75, nY);
@@ -320,7 +321,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 						addMove();
 					}
 				}
-				else if(finalY > 150 && (mobility[i] == 'b' || mobility[i] == 'v')) {
+				else if(finalY > 150 && (mobility[i] == 'b' || mobility[i] == 'v')) {//Handles the movement depending if the user wants to move up down right or left...
 					temp.setLocation(nX,nY+75);
 					if(isCollision(temp, i, nX,nY+75, grid[i])){
 						grid[i].setLocation(nX, nY+75);
@@ -329,7 +330,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 						addMove();
 					}
 				}
-				else if(finalY < -150 && (mobility[i] == 'b' || mobility[i] == 'v')) {
+				else if(finalY < -150 && (mobility[i] == 'b' || mobility[i] == 'v')) {//Handles the movement depending if the user wants to move up down right or left...
 					temp.setLocation(nX,nY-75);
 					if(isCollision(temp, i, nX,nY-75, grid[i])){
 						grid[i].setLocation(nX, nY-75);
@@ -357,7 +358,7 @@ public class PuzzleGUI extends JFrame implements MouseMotionListener{
 			}
 			else {
 				stopTimer();
-				JOptionPane.showMessageDialog(this,"No More Puzzles for You, Mister!\n");
+				JOptionPane.showMessageDialog(this,"No More Puzzles for You, Mister!\n");	//User recieves this dialogue if they have completed all the puzzles
 				System.exit(1);
 			}
 			

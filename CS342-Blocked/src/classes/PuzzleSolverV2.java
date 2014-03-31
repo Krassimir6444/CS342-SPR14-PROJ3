@@ -2,36 +2,39 @@ package classes;
 
 import java.util.*;
 
+//PuzzleSolver Class essentially creates a hint/solution for the user if they requested it.
+
 public class PuzzleSolverV2
 {
-	private Move hint = null;	
-	private Snapshot solution = null;				
+	private Move hint = null;	//Move to store hint
+	private Snapshot solution = null;				//SnapShot to store the solution 
 	private ArrayList<Snapshot> queue = new ArrayList<Snapshot>();		// Snapshots to process
-	private HashSet<Integer> prevConfigs;	// Previous configurations of the board
-	private int rows;
-	private int columns;
-	private int movesNeeded = 0;
+	private HashSet<Integer> pConfigs;	// Previous configurations of the board
+	private int rows;				//ROws of the board
+	private int columns;			//Columns of the Board
+	private int movesNeeded = 0;	//Moves needed variable for later use
 
-	public PuzzleSolverV2(Pieces[] blocks, int numBlocks, int rows, int columns){
-		this.rows = rows;
+	//Main Method that initializes the puzzle solver and performs BFS
+	public PuzzleSolverV2(Pieces[] blocks, int numBlocks, int rows, int columns){	//Takes the Pieces from the board as parameters and the number of them including rows 
+		this.rows = rows;															//Columns
 		this.columns = columns;
-		Snapshot FirstSnap = new Snapshot(null,blocks, numBlocks, 'a', 0, 0);
-		prevConfigs = new HashSet<Integer>();
-		queue.add(FirstSnap);
-		addToPrevConfig(FirstSnap.boardSnap());
+		Snapshot FirstSnap = new Snapshot(null,blocks, numBlocks, 'a', 0, 0);	//Creates first snap shot
+		pConfigs = new HashSet<Integer>();									//sets new hashset
+		queue.add(FirstSnap);												//Adds first board to queue
+		HashKey(FirstSnap.boardSnap());										//Adds first board to hashset
 		
-		while(!queue.isEmpty()){
-			FirstSnap = queue.get(0);
-			queue.remove(0);
-			Pieces[] updatedPieces = FirstSnap.piecesSnap();
+		while(!queue.isEmpty()){											//While loop to process queue
+			FirstSnap = queue.get(0);										//Gets first board on the queue
+			queue.remove(0);												//and removes it
+			Pieces[] updatedPieces = FirstSnap.piecesSnap();				//Gets pieces
 			
-			if(foundSolution(FirstSnap)){
+			if(foundSolution(FirstSnap)){									//If a solution is found the loop breaks
 				solution = FirstSnap;
-				hint = FirstSnap.moves.get(0);
+				hint = FirstSnap.moves.get(1);
 				break;
 			}
 			
-			for(int i=0;i<numBlocks;i++){
+			for(int i=0;i<numBlocks;i++){									//For loop that goes through each piece and sees if they can be moved...
 				char movement = updatedPieces[i].mobility;
 				
 				switch(movement){
@@ -54,44 +57,42 @@ public class PuzzleSolverV2
 		if (solution == null)
 			System.out.println("Puzzle has no solution");
 	}
-	
+	//Method that sees if the current block can be moved horizontally in either direction
 	public void Horizontal(Snapshot temp, int specificBlock){
-		Pieces[] tempPiece = temp.piecesSnap();
+		Pieces[] tempPiece = temp.piecesSnap();									//Gets the certain pieces values x,y,width, height, etx
 		int x = tempPiece[specificBlock].x;
 		int y = tempPiece[specificBlock].y;
 		int width = tempPiece[specificBlock].width;
 		int height = tempPiece[specificBlock].height;
 		int id = tempPiece[specificBlock].id;
 		char mobility = tempPiece[specificBlock].mobility;
-		boolean Right = tempPiece[specificBlock].moveRight(temp.boardSnap());
+		boolean Right = tempPiece[specificBlock].moveRight(temp.boardSnap());			//Booleans to determine if the piece can be moved left or right
 		boolean Left = tempPiece[specificBlock].moveLeft(temp.boardSnap());
 		
-		if(Right){
-			System.out.println("Right!");
+		if(Right){																		//If the piece can be moved to the right then a new snap shot is created
+																						//Of the piece moving to the right
 			Pieces movedPiece = new Pieces(x,y+1,width,height,id,mobility);
 			tempPiece[specificBlock] = movedPiece;
 			Snapshot newRightSnap = new Snapshot(temp, tempPiece, tempPiece.length, 'r', 1, id);
 			
-			if (addToPrevConfig(newRightSnap.board) == true){
-				System.out.println("Added to Q");
+			if (HashKey(newRightSnap.board) == true){
 				queue.add(newRightSnap);
 			}
 		}
-		if(Left){
-			System.out.println("Left!");
+		if(Left){																		//If the piece can move to the left then a new snapshot is created 
+																						//One in which the piece is moving to the left
 			Pieces movedPiece = new Pieces(x,y-1,width,height,id,mobility);
 			tempPiece[specificBlock] = movedPiece;
 			Snapshot newLeftSnap = new Snapshot(temp, tempPiece, tempPiece.length, 'l', -1, id);
 			
-			if (addToPrevConfig(newLeftSnap.board) == true){
-				System.out.println("Added to Q");
+			if (HashKey(newLeftSnap.board) == true){
 				queue.add(newLeftSnap);
 			}
 		}
 	}
-	
+	//Vetical method essentially if the specific piece can be moved up or down and if it can it creates a new snap shot of it
 	public void Vertical(Snapshot temp, int specificBlock){
-		Pieces[] tempPiece = temp.piecesSnap();
+		Pieces[] tempPiece = temp.piecesSnap();							//Stores all values pertaining to the certain piece
 		int x = tempPiece[specificBlock].x;
 		int y = tempPiece[specificBlock].y;
 		int width = tempPiece[specificBlock].width;
@@ -101,43 +102,38 @@ public class PuzzleSolverV2
 		boolean Up = tempPiece[specificBlock].moveUp(temp.boardSnap());
 		boolean Down = tempPiece[specificBlock].moveDown(temp.boardSnap());
 		
-		if(Up){
-			System.out.println("Up!");
+		if(Up){																					//If the piece can move up then it creates a new snapshot of the piece Going up
 			Pieces movedPiece = new Pieces(x-1,y,width,height,id,mobility);
 			tempPiece[specificBlock] = movedPiece;
 			Snapshot newUpSnap = new Snapshot(temp, tempPiece, tempPiece.length, 'u', 1, id);
 			
-			if (addToPrevConfig(newUpSnap.board) == true){
-				System.out.println("Added to Q");
+			if (HashKey(newUpSnap.board) == true){
 				queue.add(newUpSnap);
 			}
 		}
-		if(Down){
-			System.out.println("Down!");
-			Pieces movedPiece = new Pieces(x+1,y,width,height,id,mobility);
+		if(Down){																				
+			Pieces movedPiece = new Pieces(x+1,y,width,height,id,mobility);					//If the piece can move down it creates a snap shot of it moving down
 			tempPiece[specificBlock] = movedPiece;
 			Snapshot newDownSnap = new Snapshot(temp, tempPiece, tempPiece.length, 'd', -1, id);
 			
-			if (addToPrevConfig(newDownSnap.board) == true){
-				System.out.println("Added to Q");
+			if (HashKey(newDownSnap.board) == true){
 				queue.add(newDownSnap);
 			}
 		}
 	}
-	
+	//Snap shot class that holds all the information of that current snapshot like board pieces etc
 	private class Snapshot
 	{
 		private int board[][];			// Current board
 		public ArrayList<Move> moves = new ArrayList<Move>();	// Moves it took to get this board
 		private Pieces[] snapshotPieces;
 		
-		public Snapshot(Snapshot old, Pieces[] blocks, int numBlocks, char direction, int value, int ID){
+		public Snapshot(Snapshot old, Pieces[] blocks, int numBlocks, char direction, int value, int ID){	//Main method to store snapshot
 			this.board = createBoard(blocks, numBlocks);
 			this.snapshotPieces = blocks;
 			printBoard(board);
-			System.out.println("Moves: "+movesNeeded);
 			if(movesNeeded !=0){
-				for (int i=0; i<old.moves.size(); i++)
+				for (int i=0; i<old.moves.size(); i++)				//Stores all previous moves to get to the current board
 				{
 					Move temp = old.moves.get(i);
 					this.moves.add(temp);
@@ -161,11 +157,11 @@ public class PuzzleSolverV2
 		}
 	}
 	
-	public int[][] createBoard(Pieces[] blocks, int numBlocks){
+	public int[][] createBoard(Pieces[] blocks, int numBlocks){	//Creates a board of arbitrary size and returns it
 		int [][] temp = new int[rows][columns];
 		
 		for(int i=0;i<numBlocks;i++){
-			int x = blocks[i].x;
+			int x = blocks[i].x;			//Gets piece info and creates the board
 			int y = blocks[i].y;
 			int height = blocks[i].height; 
 			int width = blocks[i].width;
@@ -180,7 +176,7 @@ public class PuzzleSolverV2
 		return temp;
 	}
 	
-	public void printBoard(int board[][]){
+	public void printBoard(int board[][]){			//Method function to print out the board
 		for(int j=0;j<rows;j++){
 			for(int k=0;k<columns;k++){
 				System.out.printf("%d ", board[j][k]);
@@ -188,10 +184,10 @@ public class PuzzleSolverV2
 			System.out.printf("\n");
 		}
 	}
-	
-	private class Move
+	//Class move that stores the spefici move that was just made
+	private class Move	
 	{
-		public char direction;	
+		public char direction;	//Stores the direction in which the piece is going
 		public int value;		// -1 for left/down, +1 for right/up
 		public int blockID;		// Which block was moved
 
@@ -202,33 +198,33 @@ public class PuzzleSolverV2
 			this.blockID = ID;
 		}
 	}
-	
-	public boolean addToPrevConfig(int key[][]){	
-		int s = 0;	// Convert board to a string
+	//HashKey Method hashes specific board to hashset
+	public boolean HashKey(int key[][]){	//Hashes
+		int k = 0;	// Initial key
 
 		for (int i=0; i<rows; i++)
 			for (int j = 0; j < columns; j++)
 				if(key[i][j] != 0){
-					s += (i*j);
+					k += (i*j);
 				}
 
-		// Hashsets do not allow duplicate values - duplicate strings would not be added (false returned)
-		boolean ret = prevConfigs.add(s);
+		// Returns false if the board is already in the hashset
+		boolean ret = pConfigs.add(k);
 		return ret;
 	}
-
+	//FoundSolution method determines if a solution has been found
 	public boolean foundSolution(Snapshot temp){
 		int [][] tempBoard = temp.boardSnap();
 		
 		for(int i=0;i<rows;i++){
-				if(tempBoard[i][columns-1] == 8){
+				if(tempBoard[i][columns-1] == 8){	//Checks if the Z piece is on the last column
 					return true;
 				}
 		}
 		return false;
 	}
 	
-	public void printHint(int numBlocks)
+	public void printHint(int numBlocks)		//Prints hint method allows the printing of a certain hint
 	{
 		if (solution != null) {
 			int id = hint.blockID;
@@ -237,7 +233,7 @@ public class PuzzleSolverV2
 				System.out.print("Hint: Move block Z one spot ");
 			else
 				// Numbers
-				System.out.print("Hint: Move block " + (id + 1) + " one spot ");
+				System.out.print("Hint: Move block " + id + " one spot ");
 
 			if (hint.direction == 'u') {
 				System.out.print("up\n");
@@ -256,11 +252,10 @@ public class PuzzleSolverV2
 			System.out.println("Puzzle has no solution");
 	}
 
-	public void printSolution() {
+	public void printSolution() {	//PrintSolution method prints out a solution to the current board
 		if (solution != null) {
 			for (int i = 0; i < solution.moves.size(); i++) {
 				int id = solution.moves.get(i).blockID;
-				System.out.print(i + 1 + ". ");
 
 				if (id == 8)
 					System.out.print("Move block Z one spot ");
@@ -277,15 +272,6 @@ public class PuzzleSolverV2
 				} else if (hint.direction == 'l') {
 					System.out.print("left\n");
 				}
-			}
-
-			// Print out the solved board
-			System.out.println("\nSolved board:");
-			for (int i = 0; i < rows; i++) {
-				for (int j = 0; j < columns; j++)
-					System.out.print(solution.board[i][j] + " ");
-
-				System.out.println();
 			}
 		}
 		

@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.lang.StringBuilder;
-
+//FileInput class essentially allows the user to retrieve puzzles from .txt files
 public class FileInput {
 	private int rows, columns, start, end, width1, length1, lineRead = 0;
 	private char mobility1;
@@ -18,22 +18,22 @@ public class FileInput {
 		String currentPuzzle = puzzle.toString();
 		File file = new File(currentPuzzle);
         try {
-             Scanner scanner = new Scanner(file); 
+             Scanner scanner = new Scanner(file); //Reading in the file
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] tokens = line.split(" ");
                 if(lineRead == 0){
-	                rows = Integer.parseInt(tokens[0]);
+	                rows = Integer.parseInt(tokens[0]);			//Parsing the file for rows and columns
 	                columns = Integer.parseInt(tokens[1]);
                 }
                 else{
-                	start =  Integer.parseInt(tokens[0]);
+                	start =  Integer.parseInt(tokens[0]);			//Parsing the file for the x,y,width,height, mobility of each piece
                 	end = Integer.parseInt(tokens[1]);
                 	width1 = Integer.parseInt(tokens[2]);
                 	length1 = Integer.parseInt(tokens[3]);
                 	String s = tokens[4];
                 	mobility1 = s.charAt(0);
-                	addNode(start, end, width1, length1, mobility1);
+                	addNode(start, end, width1, length1, mobility1);	//Adds it to the linked list
                 	numPieces++;
                 }
                 lineRead++;
@@ -68,7 +68,7 @@ public class FileInput {
 		root = newNode;
 	}
 	
-	public Node listTraversal(Node root1, int spefVal){
+	public Node listTraversal(Node root1, int spefVal){	//Traverses the linked list
 		Node newNode = root1;
 		int i = 0;
 		while(spefVal != i && newNode.next != null){
@@ -77,7 +77,7 @@ public class FileInput {
 		}
 		return newNode;
 	}
-	
+	//General getters
 	public int boardRow(){
 		return rows;
 	}
@@ -111,7 +111,7 @@ public class FileInput {
 	}
 	
 }
-class Node{ 
+class Node{ //Linked list that stores each pieces info
 	int startPos;			
 	int endPos;
 	int width;
